@@ -1,0 +1,14 @@
+{
+  "prompts": [
+    { "bucket": "prose", "prompt": "Explain what a database index is and when to add one." },
+    { "bucket": "prose", "prompt": "Summarize the tradeoffs between REST and GraphQL." },
+    { "bucket": "prose", "prompt": "Describe how a hash map handles collisions." },
+    { "bucket": "prose", "prompt": "What is the difference between a process and a thread?" },
+    { "bucket": "prose", "prompt": "Explain why a team might use a message queue." },
+    { "bucket": "code", "prompt": "Write a Python function that returns the nth Fibonacci number." },
+    { "bucket": "code", "prompt": "Write a JavaScript debounce function." },
+    { "bucket": "code", "prompt": "Write a SQL query to find the second highest salary in an employees table." },
+    { "bucket": "code", "prompt": "Write a Python function to check if a string is a palindrome." },
+    { "bucket": "code", "prompt": "Write a bash one-liner to count total lines across all .txt files." }
+  ]
+}

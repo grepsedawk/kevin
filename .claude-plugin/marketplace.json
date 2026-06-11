@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "kevin",
+  "description": "Kevin from The Office voice for Claude Code. Fewest words that carry the meaning.",
+  "owner": {
+    "name": "Ally Piechowski",
+    "url": "https://github.com/grepsedawk"
+  },
+  "plugins": [
+    {
+      "name": "kevin",
+      "description": "Talk like Kevin. Cut filler. Prose only — code and commits stay plain.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
