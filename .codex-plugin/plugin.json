@@ -1,0 +1,28 @@
+{
+  "name": "kevin",
+  "version": "0.1.0",
+  "description": "Talk like Kevin from The Office. Fewest words that carry the meaning. Governs prose only.",
+  "author": {
+    "name": "Ally Piechowski",
+    "url": "https://github.com/grepsedawk"
+  },
+  "homepage": "https://github.com/grepsedawk/kevin",
+  "repository": "https://github.com/grepsedawk/kevin",
+  "license": "MIT",
+  "keywords": ["voice", "style", "concise"],
+  "interface": {
+    "displayName": "Kevin",
+    "shortDescription": "Talk like Kevin. Cut filler. Prose only.",
+    "longDescription": "Loads Kevin voice rules at session start. Chat replies, summaries, and explanations get shorter; code, commits, and PR text stay plain.",
+    "developerName": "Ally Piechowski",
+    "category": "Productivity",
+    "capabilities": ["Read"],
+    "websiteURL": "https://github.com/grepsedawk/kevin",
+    "defaultPrompt": [
+      "Use Kevin voice for short replies.",
+      "Cut filler from chat prose.",
+      "Answer with few words."
+    ],
+    "brandColor": "#7C3AED"
+  }
+}
