@@ -6,9 +6,36 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'ROOT=\"${PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT}\"; [ -n \"$ROOT\" ] || exit 0; command -v node >/dev/null 2>&1 || exit 0; node \"$ROOT/hooks/kevin-activate.js\"'",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/kevin-activate.js\"",
+            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\kevin-activate.js\" }",
             "timeout": 5,
             "statusMessage": "Loading Kevin..."
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/kevin-subagent.js\"",
+            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\kevin-subagent.js\" }",
+            "timeout": 5,
+            "statusMessage": "Loading Kevin..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/kevin-prompt.js\"",
+            "commandWindows": "if (Get-Command node -ErrorAction SilentlyContinue) { node \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\kevin-prompt.js\" }",
+            "timeout": 5,
+            "statusMessage": "Tracking Kevin..."
           }
         ]
       }

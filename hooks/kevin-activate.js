@@ -1,16 +1,14 @@
 #!/usr/bin/env node
-// kevin — Claude Code SessionStart hook.
-// Prints the Kevin voice rules to stdout; Claude Code injects stdout as
-// hidden session context, so the persona loads every session.
-// kevin-voice.md is the single source of truth, shared with the benchmark.
+const { clearDisabled, isDisabled, readInput, voice, writeContext } = require('./kevin-runtime');
 
-const fs = require('fs');
-const path = require('path');
+readInput((input) => {
+  const source = input.source || 'startup';
 
-const voicePath = path.join(__dirname, '..', 'kevin-voice.md');
+  if (source === 'startup' || source === 'clear') {
+    clearDisabled(input.session_id);
+  } else if (isDisabled(input.session_id)) {
+    return;
+  }
 
-try {
-  process.stdout.write(fs.readFileSync(voicePath, 'utf8'));
-} catch (e) {
-  process.stdout.write('KEVIN MODE ACTIVE — voice file missing at ' + voicePath);
-}
+  writeContext('SessionStart', voice());
+});

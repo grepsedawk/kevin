@@ -49,11 +49,19 @@ A single answer understates it. The API is stateless, so the whole transcript ri
 
 ## How it works
 
-A single SessionStart hook prints `kevin-voice.md` as hidden session context, so the persona loads on every startup, resume, clear, and compact. No state file, no background process. Turn it off mid-session by saying "stop kevin" or "normal mode"; the model honors it, it isn't a setting.
+Three small lifecycle hooks keep Kevin active without loading the full rules on every turn:
+
+- `SessionStart` injects `kevin-voice.md` on startup, resume, clear, and compact.
+- `UserPromptSubmit` handles exact "stop kevin," "normal mode," and reactivation commands.
+- `SubagentStart` gives spawned agents the same voice rules because they do not inherit parent-thread context.
+
+The off switch is scoped to the current session. A new session starts with Kevin active. No background process or network call.
 
 `kevin-voice.md` is the single source of truth. The hook and the benchmark both read it.
 
 ## Install
+
+Kevin's lifecycle hooks require Node.js on the non-interactive shell's `PATH`.
 
 ### Claude Code
 
@@ -77,6 +85,8 @@ Add the marketplace and install the plugin:
 codex plugin marketplace add grepsedawk/kevin
 codex plugin add kevin@kevin
 ```
+
+Start Codex, open `/hooks`, review and trust Kevin's three lifecycle hooks, then start a new thread. Codex requires this one-time approval for command hooks. Enabling the plugin does not enable its hooks.
 
 ## Benchmarks
 
