@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'ROOT=\"${PLUGIN_ROOT:-$CLAUDE_PLUGIN_ROOT}\"; [ -n \"$ROOT\" ] || exit 0; command -v node >/dev/null 2>&1 || exit 0; node \"$ROOT/hooks/kevin-activate.js\"'",
+            "timeout": 5,
+            "statusMessage": "Loading Kevin..."
+          }
+        ]
+      }
+    ]
+  }
+}
