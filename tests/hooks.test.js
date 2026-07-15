@@ -42,7 +42,12 @@ test('hook config covers parent threads, prompts, and subagents', () => {
     'SubagentStart',
     'UserPromptSubmit',
   ]);
-  assert.equal(config.hooks.SessionStart[0].matcher, 'startup|resume|clear|compact');
+  assert.equal(config.hooks.SessionStart[0].matcher, 'startup|resume|clear');
+  assert.equal(config.hooks.SessionStart[1].matcher, 'compact');
+  assert.equal(config.hooks.SessionStart[0].hooks[0].statusMessage, 'Loading Kevin...');
+  assert.equal(config.hooks.SessionStart[1].hooks[0].statusMessage, undefined);
+  assert.equal(config.hooks.SubagentStart[0].hooks[0].statusMessage, undefined);
+  assert.equal(config.hooks.UserPromptSubmit[0].hooks[0].statusMessage, undefined);
 
   for (const groups of Object.values(config.hooks)) {
     for (const hook of groups.flatMap((group) => group.hooks)) {
@@ -68,6 +73,19 @@ test('SessionStart injects the full voice rules', () => {
   assert.match(context(result), /Drop the voice for/);
 });
 
+test('compaction gets a short reminder without the activation banner', () => {
+  const data = fs.mkdtempSync(path.join(os.tmpdir(), 'kevin-hooks-'));
+  const result = run('kevin-activate.js', data, {
+    session_id: 'session-compact',
+    source: 'compact',
+  });
+  const reminder = context(result);
+
+  assert.match(reminder, /Use Kevin voice for prose/);
+  assert.doesNotMatch(reminder, /KEVIN MODE ACTIVE/);
+  assert.ok(reminder.length < 300);
+});
+
 test('off and on commands are session-scoped', () => {
   const data = fs.mkdtempSync(path.join(os.tmpdir(), 'kevin-hooks-'));
   const session = { session_id: 'session-two' };
@@ -82,7 +100,8 @@ test('off and on commands are session-scoped', () => {
     session_id: 'another-session',
     agent_type: 'general',
   });
-  assert.match(context(result), /KEVIN MODE ACTIVE/);
+  assert.match(context(result), /Use Kevin voice for prose/);
+  assert.doesNotMatch(context(result), /KEVIN MODE ACTIVE/);
 
   result = run('kevin-activate.js', data, { ...session, source: 'compact' });
   assert.equal(output(result), null);
@@ -91,7 +110,8 @@ test('off and on commands are session-scoped', () => {
   assert.match(context(result), /KEVIN MODE ACTIVE/);
 
   result = run('kevin-subagent.js', data, { ...session, agent_type: 'general' });
-  assert.match(context(result), /KEVIN MODE ACTIVE/);
+  assert.match(context(result), /Use Kevin voice for prose/);
+  assert.doesNotMatch(context(result), /KEVIN MODE ACTIVE/);
 });
 
 test('incidental mentions do not switch modes', () => {
@@ -105,7 +125,7 @@ test('incidental mentions do not switch modes', () => {
   assert.match(context(run('kevin-subagent.js', data, {
     session_id: 'session-three',
     agent_type: 'general',
-  })), /KEVIN MODE ACTIVE/);
+  })), /Use Kevin voice for prose/);
 });
 
 test('a new startup resets a disabled session', () => {

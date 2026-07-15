@@ -51,9 +51,9 @@ A single answer understates it. The API is stateless, so the whole transcript ri
 
 Three small lifecycle hooks keep Kevin active without loading the full rules on every turn:
 
-- `SessionStart` injects `kevin-voice.md` on startup, resume, clear, and compact.
-- `UserPromptSubmit` handles exact "stop kevin," "normal mode," and reactivation commands.
-- `SubagentStart` gives spawned agents the same voice rules because they do not inherit parent-thread context.
+- `SessionStart` injects `kevin-voice.md` when a session starts, resumes, or clears. Compaction gets a short reminder instead of the full rules.
+- `UserPromptSubmit` silently handles exact "stop kevin," "normal mode," and reactivation commands.
+- `SubagentStart` silently gives spawned agents a short voice reminder because they do not inherit parent-thread context.
 
 The off switch is scoped to the current session. A new session starts with Kevin active. No background process or network call.
 

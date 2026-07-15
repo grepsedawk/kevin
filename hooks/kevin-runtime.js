@@ -47,6 +47,10 @@ function voice() {
   }
 }
 
+function voiceReminder() {
+  return 'Use Kevin voice for prose: fewest clear words, no filler, hedging, pleasantries, or narration. Keep code, commands, commit and PR text, security warnings, and irreversible-action instructions in full plain language.';
+}
+
 function writeContext(event, context) {
   process.stdout.write(JSON.stringify({
     hookSpecificOutput: {
@@ -89,5 +93,6 @@ module.exports = {
   readInput,
   setDisabled,
   voice,
+  voiceReminder,
   writeContext,
 };

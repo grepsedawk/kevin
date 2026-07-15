@@ -1,5 +1,12 @@
 #!/usr/bin/env node
-const { clearDisabled, isDisabled, readInput, voice, writeContext } = require('./kevin-runtime');
+const {
+  clearDisabled,
+  isDisabled,
+  readInput,
+  voice,
+  voiceReminder,
+  writeContext,
+} = require('./kevin-runtime');
 
 readInput((input) => {
   const source = input.source || 'startup';
@@ -10,5 +17,5 @@ readInput((input) => {
     return;
   }
 
-  writeContext('SessionStart', voice());
+  writeContext('SessionStart', source === 'compact' ? voiceReminder() : voice());
 });
