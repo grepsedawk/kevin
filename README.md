@@ -55,6 +55,8 @@ A single SessionStart hook prints `kevin-voice.md` as hidden session context, so
 
 ## Install
 
+### Claude Code
+
 Add the marketplace:
 
 ```
@@ -65,6 +67,15 @@ Then install the plugin:
 
 ```
 /plugin install kevin@kevin
+```
+
+### Codex
+
+Add the marketplace and install the plugin:
+
+```sh
+codex plugin marketplace add grepsedawk/kevin
+codex plugin add kevin@kevin
 ```
 
 ## Benchmarks
