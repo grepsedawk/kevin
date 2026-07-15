@@ -5,19 +5,5 @@
     "name": "Ally Piechowski",
     "url": "https://github.com/grepsedawk"
   },
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "startup|resume|clear|compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "command -v node >/dev/null 2>&1 && node \"${CLAUDE_PLUGIN_ROOT}/hooks/kevin-activate.js\" || exit 0",
-            "timeout": 5,
-            "statusMessage": "Loading Kevin..."
-          }
-        ]
-      }
-    ]
-  }
+  "hooks": "./hooks/hooks.json"
 }
