@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if [ -r \"$CLAUDE_PLUGIN_ROOT/kevin-voice.md\" ]; then cat \"$CLAUDE_PLUGIN_ROOT/kevin-voice.md\"; else printf \"%s\\n\" \"Use Kevin voice: fewest clear words, prose only.\"; fi'",
+            "commandWindows": "if (Test-Path \"$env:CLAUDE_PLUGIN_ROOT\\kevin-voice.md\") { Get-Content -Raw \"$env:CLAUDE_PLUGIN_ROOT\\kevin-voice.md\" } else { Write-Output \"Use Kevin voice: fewest clear words, prose only.\" }",
+            "timeout": 5,
+            "statusMessage": "Loading Kevin..."
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if [ -r \"$CLAUDE_PLUGIN_ROOT/kevin-voice.md\" ]; then cat \"$CLAUDE_PLUGIN_ROOT/kevin-voice.md\"; else printf \"%s\\n\" \"Use Kevin voice: fewest clear words, prose only.\"; fi'",
+            "commandWindows": "if (Test-Path \"$env:CLAUDE_PLUGIN_ROOT\\kevin-voice.md\") { Get-Content -Raw \"$env:CLAUDE_PLUGIN_ROOT\\kevin-voice.md\" } else { Write-Output \"Use Kevin voice: fewest clear words, prose only.\" }",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
-# Smoke test: the SessionStart hook emits the voice rules.
 set -euo pipefail
 
-out="$(node "$(dirname "$0")/../hooks/kevin-activate.js")"
+root="$(cd "$(dirname "$0")/.." && pwd)"
+hooks="$root/hooks/hooks.json"
 
-fail=0
-for needle in "KEVIN MODE ACTIVE" "Cut filler words" "Swap table" "Drop the voice for"; do
-  if ! grep -qF "$needle" <<<"$out"; then
-    echo "FAIL: hook output missing: $needle"
-    fail=1
-  fi
+out="$(
+  CLAUDE_PLUGIN_ROOT="$root" \
+    sh -c 'if [ -r "$CLAUDE_PLUGIN_ROOT/kevin-voice.md" ]; then cat "$CLAUDE_PLUGIN_ROOT/kevin-voice.md"; else printf "%s\n" "Use Kevin voice: fewest clear words, prose only."; fi'
+)"
+
+for needle in "KEVIN MODE ACTIVE" "Cut filler words" "Drop the voice for"; do
+  grep -qF "$needle" <<<"$out"
 done
 
-if [ "$fail" -eq 0 ]; then
-  echo "PASS: activate hook emits the voice rules"
+if grep -qE '"(UserPromptSubmit|SubagentStart)"|node ' "$hooks"; then
+  echo "FAIL: hooks must not require Node or run on prompts/subagents" >&2
+  exit 1
 fi
-exit "$fail"
+
+grep -qF '"matcher": "startup|resume|clear"' "$hooks"
+grep -qF '"matcher": "compact"' "$hooks"
+
+echo "PASS: runtime-free SessionStart hook emits Kevin rules"

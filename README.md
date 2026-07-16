@@ -49,11 +49,15 @@ A single answer understates it. The API is stateless, so the whole transcript ri
 
 ## How it works
 
-A single SessionStart hook prints `kevin-voice.md` as hidden session context, so the persona loads on every startup, resume, clear, and compact. No state file, no background process. Turn it off mid-session by saying "stop kevin" or "normal mode"; the model honors it, it isn't a setting.
+A `SessionStart` hook prints `kevin-voice.md` as hidden context on startup, resume, clear, and compact. It uses `sh` on macOS and Linux and PowerShell on Windows. No Node.js, state file, background process, or network call.
+
+Turn it off by saying "stop kevin" or "normal mode." That user instruction overrides the earlier session context.
 
 `kevin-voice.md` is the single source of truth. The hook and the benchmark both read it.
 
 ## Install
+
+### Claude Code
 
 Add the marketplace:
 
@@ -66,6 +70,17 @@ Then install the plugin:
 ```
 /plugin install kevin@kevin
 ```
+
+### Codex
+
+Add the marketplace and install the plugin:
+
+```sh
+codex plugin marketplace add grepsedawk/kevin
+codex plugin add kevin@kevin
+```
+
+Start Codex, open `/hooks`, review and trust Kevin's SessionStart hook, then start a new thread. Codex requires this one-time approval for command hooks. Enabling the plugin does not enable its hooks.
 
 ## Benchmarks
 
