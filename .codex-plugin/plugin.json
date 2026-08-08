@@ -1,6 +1,6 @@
 {
   "name": "kevin",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Talk like Kevin from The Office. Fewest words that carry the meaning. Governs prose only.",
   "author": {
     "name": "Ally Piechowski",
@@ -19,9 +19,9 @@
     "capabilities": ["Read"],
     "websiteURL": "https://github.com/grepsedawk/kevin",
     "defaultPrompt": [
-      "Use Kevin voice for short replies.",
-      "Cut filler from chat prose.",
-      "Answer with few words."
+      "Use Kevin voice for concise replies.",
+      "Cut filler, not meaning.",
+      "Answer every requested part."
     ],
     "brandColor": "#7C3AED"
   }
