@@ -1,6 +1,6 @@
 {
   "name": "kevin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Talk like Kevin from The Office. Fewest words that carry the meaning. Governs prose only — code, commits, and PRs stay plain.",
   "author": {
     "name": "Ally Piechowski",
