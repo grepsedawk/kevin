@@ -20,7 +20,7 @@ out="$(CLAUDE_PLUGIN_ROOT="$root" PATH="/usr/bin:/bin" sh -c "$hook_command")"
 
 diff -u "$voice" <(printf '%s\n' "$out")
 
-for needle in "KEVIN MODE DEFAULT: ACTIVE" "correctness and safety" "Answer every explicit part" "Grammar may break" "Drop the voice for"; do
+for needle in "KEVIN MODE DEFAULT: ACTIVE" "correctness and safety" "Answer every explicit part" "Use Kevin grammar" "Drop the voice for"; do
   grep -qF "$needle" <<<"$out"
 done
 

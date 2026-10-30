@@ -80,7 +80,9 @@ codex plugin marketplace add grepsedawk/kevin
 codex plugin add kevin@kevin
 ```
 
-Start Codex, open `/hooks`, review and trust Kevin's SessionStart hook, then start a new thread. Codex requires this one-time approval for command hooks. Enabling the plugin does not enable its hooks.
+Start Codex, open `/hooks`, review and trust both Kevin SessionStart hooks, then start a new thread. One covers startup, resume, and clear; the other restores the rules after compaction. Enabling the plugin does not trust its hooks.
+
+After an update, check `/hooks` again. Codex tracks trust for both hook definitions and plugin contents, so a voice-prompt change can require fresh approval even when the hook command is unchanged. Hooks marked for review are skipped.
 
 ## Benchmarks
 
