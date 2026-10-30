@@ -24,7 +24,7 @@ from pathlib import Path
 import anthropic
 
 ROOT = Path(__file__).resolve().parent.parent
-VOICE = (ROOT / "kevin-voice.md").read_text()
+VOICE = (ROOT / "skills" / "kevin" / "SKILL.md").read_text()
 PLAIN = "You are a helpful assistant."
 MODEL = os.environ.get("KEVIN_BENCH_MODEL", "claude-opus-4-8")
 

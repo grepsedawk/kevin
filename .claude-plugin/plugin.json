@@ -1,7 +1,7 @@
 {
   "name": "kevin",
-  "version": "0.2.1",
-  "description": "Talk like Kevin from The Office. Fewest words that carry the meaning. Governs prose only — code, commits, and PRs stay plain.",
+  "version": "0.3.0",
+  "description": "Portable Agent Skill for Kevin-style concise prose. Keeps meaning, artifacts, and warnings intact.",
   "author": {
     "name": "Ally Piechowski",
     "url": "https://github.com/grepsedawk"
