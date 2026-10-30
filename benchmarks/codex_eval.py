@@ -195,7 +195,9 @@ CASES = (
 def parse_args(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--baseline-ref", default="HEAD")
-    parser.add_argument("--candidate", type=Path, default=ROOT / "kevin-voice.md")
+    parser.add_argument(
+        "--candidate", type=Path, default=ROOT / "skills" / "kevin" / "SKILL.md"
+    )
     parser.add_argument("--model", default=os.environ.get("KEVIN_CODEX_MODEL"))
     parser.add_argument("--judge-model")
     parser.add_argument("--output", type=Path)
@@ -207,14 +209,16 @@ def parse_args(argv=None):
 
 
 def baseline_prompt(ref):
-    result = subprocess.run(
-        tool_command("git", "show", f"{ref}:kevin-voice.md"),
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return result.stdout
+    for path in ("skills/kevin/SKILL.md", "kevin-voice.md"):
+        result = subprocess.run(
+            tool_command("git", "show", f"{ref}:{path}"),
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            return result.stdout
+    raise RuntimeError(f"No Kevin prompt found at {ref}")
 
 
 def tool_command(*arguments):

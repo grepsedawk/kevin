@@ -4,7 +4,7 @@ Talk like Kevin from The Office. Fewest words that still carry the meaning.
 
 > "Why waste time say lot word when few word do trick?"
 
-Kevin Malone said that to defend the way he talks, and he had a point. Most of what an AI assistant types back at you is padding: throat-clearing, hedges, restating your own question, three sentences where one would do. Kevin is a Claude Code and Codex plugin that strips it out. You get the answer, not the essay.
+Kevin Malone said that to defend the way he talks, and he had a point. Most of what an AI assistant types back at you is padding: throat-clearing, hedges, restating your own question, three sentences where one would do. Kevin is a portable [Agent Skill](https://agentskills.io) that strips it out. You get the answer, not the essay.
 
 It governs prose only. Chat replies, summaries, explanations. It leaves code, commit messages, and anything that ships under a real name completely alone.
 
@@ -27,7 +27,7 @@ Every compression tool in this space sells token savings. Kevin saves tokens too
 
 Tokens are cheap. A long-winded Opus answer costs a fraction of a cent. The resource you're actually spending is your own attention, reading the same preamble for the hundredth time today. That cost never shows up on an invoice, which is exactly why it's the one worth cutting. Kevin optimizes for your reading time. The API bill is an afterthought.
 
-"Me fix." is clear and funny. Kevin bends grammar whenever the result stays obvious. Every requested option, constraint, and decision-relevant caveat stays. It doesn't add unasked coverage, repeat the verdict, or tack on a punchline. Replies come out concise on the first pass.
+"Me fix." is clear and funny. Kevin bends grammar whenever the result stays obvious, but never crushes words together. Every requested option, constraint, and decision-relevant caveat stays. It doesn't add unasked coverage, repeat the verdict, or tack on a punchline. Replies come out concise on the first pass.
 
 The token savings are a side effect. A good one.
 
@@ -47,17 +47,39 @@ The token savings are a side effect. A good one.
 
 A single answer understates it. The API is stateless, so the whole transcript rides along on every turn. Kevin's shorter replies keep that history lean, and the gap widens turn over turn. These are raw token counts; with caching the cost gap holds up, just driven by Kevin's shorter output rather than the smaller history.
 
-## How it works
+## One skill, any compatible agent
 
-A `SessionStart` hook prints `kevin-voice.md` as hidden context on startup, resume, clear, and compact. It uses `sh` on macOS and Linux and PowerShell on Windows. No Node.js, state file, background process, or network call.
+[`skills/kevin/SKILL.md`](skills/kevin/SKILL.md) is the single source of truth. It follows the open Agent Skills format: standard YAML metadata plus Markdown instructions, with no scripts, network calls, or dependencies.
 
-Turn it off by saying "stop kevin" or "normal mode." Turn it back on with "start kevin" or "kevin mode." The latest explicit choice wins.
+Install that folder using any agent's normal skill workflow. Invoke `kevin` explicitly when you want the most predictable activation. The exact syntax and install location belong to the host; common examples are below.
 
-`kevin-voice.md` is the single source of truth. The hook and the benchmark both read it.
+Turn it off by saying "stop kevin" or "normal mode." Turn it back on with "start kevin" or "kevin mode." The latest explicit choice wins while those instructions remain in context.
+
+Agent Skills standardizes the package, not every host's lifecycle. A standard skill may load only when selected and may need to be invoked again after a new session, compaction, or subagent handoff. Kevin's optional plugin hooks preserve the old always-on behavior in hosts that support those hooks.
 
 ## Install
 
-### Claude Code
+### Portable skill
+
+Install [`skills/kevin/`](skills/kevin/) with your agent's documented Agent Skills flow. The folder can be copied, symlinked, or packaged without rewriting it.
+
+The cross-harness [`skills` CLI](https://www.skills.sh/docs/cli) can discover the standard repository layout and install Kevin for the agents you select:
+
+```sh
+npx skills add grepsedawk/kevin --skill kevin
+```
+
+The CLI is optional; review it and the skill before running third-party installers.
+
+- [Codex](https://developers.openai.com/codex/build-skills) discovers repository skills under `.agents/skills/` and user skills under `~/.agents/skills/`. Invoke with `$kevin`.
+- [Claude Code](https://code.claude.com/docs/en/skills) discovers project skills under `.claude/skills/` and user skills under `~/.claude/skills/`. Invoke with `/kevin`.
+- Other Agent Skills-compatible hosts use the same `SKILL.md`; follow that host's discovery or upload instructions.
+
+Review third-party skills before installing them. This one contains instructions only.
+
+### Plugin compatibility
+
+The existing marketplace install remains available for Claude Code and Codex. It bundles the same portable skill plus two `SessionStart` hooks for startup/resume/clear and post-compaction reload.
 
 Add the marketplace:
 
@@ -71,7 +93,7 @@ Then install the plugin:
 /plugin install kevin@kevin
 ```
 
-### Codex
+For Codex:
 
 Add the marketplace and install the plugin:
 
@@ -80,7 +102,7 @@ codex plugin marketplace add grepsedawk/kevin
 codex plugin add kevin@kevin
 ```
 
-Start Codex, open `/hooks`, review and trust both Kevin SessionStart hooks, then start a new thread. One covers startup, resume, and clear; the other restores the rules after compaction. Enabling the plugin does not trust its hooks.
+In Codex, open `/hooks`, review and trust both Kevin `SessionStart` hooks, then start a new thread. Enabling the plugin does not trust its hooks. Claude Code applies its own plugin and hook permission flow.
 
 After an update, check `/hooks` again. Codex tracks trust for both hook definitions and plugin contents, so a voice-prompt change can require fresh approval even when the hook command is unchanged. Hooks marked for review are skipped.
 
@@ -104,7 +126,7 @@ python3 benchmarks/codex_eval.py --model gpt-6-astra
 
 The model is required, either through `--model` or `KEVIN_CODEX_MODEL`. The judge uses the same model unless you pass `--judge-model`.
 
-The evaluator compares the working prompt with `HEAD`. Identical prompts fail before any model calls. After committing, choose an older baseline:
+The evaluator compares the working skill with `HEAD` (and understands the pre-0.3 `kevin-voice.md` path). Identical prompts fail before any model calls. After committing, choose an older baseline:
 
 ```sh
 python3 benchmarks/codex_eval.py --model gpt-6-astra --baseline-ref HEAD^

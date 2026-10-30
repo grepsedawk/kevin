@@ -25,7 +25,7 @@ from pathlib import Path
 import anthropic
 
 ROOT = Path(__file__).resolve().parent.parent
-VOICE = (ROOT / "kevin-voice.md").read_text()
+VOICE = (ROOT / "skills" / "kevin" / "SKILL.md").read_text()
 PROMPTS = json.loads((Path(__file__).parent / "prompts.json").read_text())["prompts"]
 
 PLAIN_SYSTEM = "You are a helpful assistant."
