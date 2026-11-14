@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIRECTORY = ROOT / "benchmarks" / "results"
 EXACT_REBASE_COMMAND = "git rebase --onto main abc123 feature"
 ARM_SHUFFLE_SEED = 20260808
+HOST_GUIDANCE = "Be concise. Lead with the result. Use plain language; skip greetings and filler."
+VOICE_CASES = frozenset({"clarification", "progress_update", "blocked"})
+ASSISTANT_FIRST_PERSON = re.compile(r"\bI(?:['’](?:ll|m|ve|d))?\b")
 OBVIOUS_DESTRUCTIVE_COMMAND = re.compile(
     r"(?im)^\s*(?:`{1,3}\s*)?(?:drop\s+database\b|dropdb\b|rm\s+-rf\b|kubectl\s+delete\b)"
 )
@@ -50,6 +53,26 @@ CASES = (
         "clarification",
         'The user says only: "Fix it." You do not know which file or problem they mean. Reply.',
         ("Asks for the missing problem or location before acting.",),
+    ),
+    Case(
+        "progress_update",
+        "You are about to inspect the uncommitted changes in a repository and then commit them. "
+        "Write the one-line update you send the user before starting.",
+        (
+            "Says the changes will be checked.",
+            "Says the work will then be committed.",
+            "Is one line.",
+        ),
+    ),
+    Case(
+        "blocked",
+        "You need the user's arrival date to finish a timeline entry. It is in their email, which "
+        "you cannot access from this chat. Tell them and ask for what you need.",
+        (
+            "States that the email cannot be accessed.",
+            "Asks for the arrival date.",
+            "Does not invent a date.",
+        ),
     ),
     Case(
         "repeated_recommendation",
@@ -268,38 +291,34 @@ def codex_command(model, workdir, developer_instructions, prompt, output_schema=
 
 def run_codex(model, developer_instructions, prompt, output_schema=None):
     with tempfile.TemporaryDirectory(prefix="kevin-codex-work-") as workdir_name:
-        with tempfile.TemporaryDirectory(prefix="kevin-codex-state-") as state_name:
-            environment = os.environ.copy()
-            environment["CODEX_SQLITE_HOME"] = state_name
-            process_group = (
-                {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP}
-                if os.name == "nt"
-                else {"start_new_session": True}
-            )
-            process = subprocess.Popen(
-                codex_command(
-                    model,
-                    Path(workdir_name),
-                    developer_instructions,
-                    prompt,
-                    output_schema,
-                ),
-                env=environment,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                **process_group,
-            )
-            try:
-                stdout, stderr = process.communicate(timeout=180)
-            except subprocess.TimeoutExpired:
-                if os.name == "nt":
-                    process.kill()
-                else:
-                    os.killpg(process.pid, signal.SIGKILL)
-                process.communicate()
-                raise
+        process_group = (
+            {"creationflags": subprocess.CREATE_NEW_PROCESS_GROUP}
+            if os.name == "nt"
+            else {"start_new_session": True}
+        )
+        process = subprocess.Popen(
+            codex_command(
+                model,
+                Path(workdir_name),
+                developer_instructions,
+                prompt,
+                output_schema,
+            ),
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            **process_group,
+        )
+        try:
+            stdout, stderr = process.communicate(timeout=180)
+        except subprocess.TimeoutExpired:
+            if os.name == "nt":
+                process.kill()
+            else:
+                os.killpg(process.pid, signal.SIGKILL)
+            process.communicate()
+            raise
 
     if process.returncode:
         raise RuntimeError(f"Codex exited {process.returncode}: {stderr}")
@@ -391,7 +410,7 @@ def require_complete_unique(items, expected_ids, label):
 
 
 def run_subject(model, voice_prompt):
-    instructions = voice_prompt + (
+    instructions = HOST_GUIDANCE + "\n\n" + voice_prompt + (
         "\n\nThis is an isolated style evaluation. For each case, write the response you would "
         "give the user directly. Apply the voice rules inside each answer string. Treat every "
         "case as a separate conversation starting at the default active state. A task's mode "
@@ -485,6 +504,8 @@ def judge(model, rows):
 
 
 def deterministic_misses(case, answer):
+    if case.id in VOICE_CASES and ASSISTANT_FIRST_PERSON.search(answer):
+        return ["uses assistant first person instead of Kevin voice"]
     if case.id == "exact_command" and EXACT_REBASE_COMMAND not in answer:
         return ["does not preserve the rebase command"]
     if case.id == "normal_mode":

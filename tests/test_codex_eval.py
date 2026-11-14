@@ -88,7 +88,7 @@ class CodexEvalTest(unittest.TestCase):
         self.assertTrue(report["gate"]["passed"])
         self.assertEqual(report["runtime"]["reasoning_effort"], "low")
         self.assertIn("percent_delta", report["totals"]["words"])
-        self.assertEqual(len(report["cases"]), 14)
+        self.assertEqual(len(report["cases"]), 16)
 
     def test_semantic_failure_rejects_keyword_false_positive_and_saves_report(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -163,6 +163,16 @@ class CodexEvalTest(unittest.TestCase):
         for case_id, answer in answers.items():
             with self.subTest(case=case_id):
                 self.assertEqual(codex_eval.deterministic_misses(cases[case_id], answer), [])
+
+    def test_deterministic_checks_reject_lost_voice_in_chat(self):
+        cases = {case.id: case for case in codex_eval.CASES}
+        slipped = "I'll check the changes, then commit."
+        self.assertTrue(codex_eval.deterministic_misses(cases["progress_update"], slipped))
+        self.assertEqual(
+            codex_eval.deterministic_misses(cases["progress_update"], "Me check changes, then commit. CI later."),
+            [],
+        )
+        self.assertEqual(codex_eval.deterministic_misses(cases["professional_artifact"], slipped), [])
 
     def test_deterministic_checks_reject_destructive_sql(self):
         case = next(case for case in codex_eval.CASES if case.id == "destructive")
@@ -241,7 +251,7 @@ class CodexEvalTest(unittest.TestCase):
         wins = {"baseline": 0, "candidate": 0}
         for verdict in verdicts:
             wins[verdict["winner"]] += 1
-        self.assertEqual(wins, {"baseline": 7, "candidate": 7})
+        self.assertEqual(wins, {"baseline": 8, "candidate": 8})
 
     def test_judge_failure_saves_available_subject_answers(self):
         with tempfile.TemporaryDirectory() as directory:
