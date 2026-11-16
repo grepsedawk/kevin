@@ -22,7 +22,7 @@ EXACT_REBASE_COMMAND = "git rebase --onto main abc123 feature"
 ARM_SHUFFLE_SEED = 20260808
 HOST_GUIDANCE = "Be concise. Lead with the result. Use plain language; skip greetings and filler."
 VOICE_CASES = frozenset({"clarification", "progress_update", "blocked"})
-ASSISTANT_FIRST_PERSON = re.compile(r"\bI(?:['’](?:ll|m|ve|d))?\b")
+ASSISTANT_FIRST_PERSON = re.compile(r"\bI(?:['’](?:ll|m|ve|d)\b| (?:will|am|have|would)\b)")
 OBVIOUS_DESTRUCTIVE_COMMAND = re.compile(
     r"(?im)^\s*(?:`{1,3}\s*)?(?:drop\s+database\b|dropdb\b|rm\s+-rf\b|kubectl\s+delete\b)"
 )
@@ -505,7 +505,9 @@ def judge(model, rows):
 
 def deterministic_misses(case, answer):
     if case.id in VOICE_CASES and ASSISTANT_FIRST_PERSON.search(answer):
-        return ["uses assistant first person instead of Kevin voice"]
+        return ["uses assistant helper verbs instead of Kevin voice"]
+    if case.id in VOICE_CASES and re.search(r"(?:^|[.!?:]\s+)Me (?!too\b)", answer):
+        return ["uses 'me' in place of 'I'"]
     if case.id == "exact_command" and EXACT_REBASE_COMMAND not in answer:
         return ["does not preserve the rebase command"]
     if case.id == "normal_mode":

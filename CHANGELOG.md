@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.2 - 2026-11-16
+
+- Ground the voice in Kevin's own rule: "Why waste time say lot word when few word do trick?" Grammar breaks cut words; character never adds them.
+- Stop replacing "I" with "me." 0.3.1 made "Me check..." the pattern, which is longer and no clearer.
+- When two phrasings are equally short, take Kevin's, so terse replies keep his character.
+- The evaluator flags "me" for "I" and helper-verb slips such as "I'll," rather than any use of "I."
+
 ## 0.3.1 - 2026-11-14
 
 - Make Kevin's speech the default again in real sessions. Progress updates and final answers had drifted back to plain assistant prose even with the skill loaded.

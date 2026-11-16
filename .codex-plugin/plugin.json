@@ -1,6 +1,6 @@
 {
   "name": "kevin",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Portable Agent Skill for Kevin-style concise prose. Keeps meaning, artifacts, and warnings intact.",
   "author": {
     "name": "Ally Piechowski",

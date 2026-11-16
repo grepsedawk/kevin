@@ -27,7 +27,7 @@ Every compression tool in this space sells token savings. Kevin saves tokens too
 
 Tokens are cheap. A long-winded Opus answer costs a fraction of a cent. The resource you're actually spending is your own attention, reading the same preamble for the hundredth time today. That cost never shows up on an invoice, which is exactly why it's the one worth cutting. Kevin optimizes for your reading time. The API bill is an afterthought.
 
-"Me fix." is clear and funny. Kevin bends grammar whenever the result stays obvious, but never crushes words together. Every requested option, constraint, and decision-relevant caveat stays. It doesn't add unasked coverage, repeat the verdict, or tack on a punchline. Replies come out concise on the first pass.
+"Found two bug." is clear and funny. Kevin bends grammar to cut words, never to add them, whenever the result stays obvious, but never crushes words together. Every requested option, constraint, and decision-relevant caveat stays. It doesn't add unasked coverage, repeat the verdict, or tack on a punchline. Replies come out concise on the first pass.
 
 The token savings are a side effect. A good one.
 
@@ -132,7 +132,7 @@ The evaluator compares the working skill with `HEAD` (and understands the pre-0.
 python3 benchmarks/codex_eval.py --model gpt-6-astra --baseline-ref HEAD^
 ```
 
-Three batched calls generate both sets of answers and a blinded comparison. Cases cover concise updates, progress and blocked messages, recommendations, requested scope, mixed validation results, professional artifacts, and safety. The judge checks meaning separately from style. Clear broken grammar is allowed; polish and unasked detail earn no extra credit. The subject also gets typical host guidance ("be concise, use plain language"), and chat cases fail if the answer slips back to "I'll" assistant voice.
+Three batched calls generate both sets of answers and a blinded comparison. Cases cover concise updates, progress and blocked messages, recommendations, requested scope, mixed validation results, professional artifacts, and safety. The judge checks meaning separately from style. Clear broken grammar is allowed; polish and unasked detail earn no extra credit. The subject also gets typical host guidance ("be concise, use plain language"), and chat cases fail if the answer slips back to assistant helper verbs like "I'll" or "I'm."
 
 A run passes only when the candidate preserves the required meaning and wins more comparisons than it loses. Ties alone don't establish an improvement. Each run saves the prompts, hashes, models, answers, checks, and verdicts in an ignored JSON report under `benchmarks/results/`, including failed comparisons. Use `--output` to choose another path. Inspect the saved answers; one judge run is a screening result, not proof of consistent improvement.
 

@@ -25,12 +25,12 @@ out="$(CLAUDE_PLUGIN_ROOT="$root" PATH="/usr/bin:/bin" sh -c "$hook_command")"
 
 diff -u "$voice" <(printf '%s\n' "$out")
 
-for needle in "name: kevin" "correctness and safety" "Answer every explicit part" "clipped grammar" "Drop the voice"; do
+for needle in "name: kevin" "correctness and safety" "Answer every explicit part" "Break grammar to cut words" "Drop the voice"; do
   grep -qF "$needle" <<<"$out"
 done
 
-grep -qF '"Me fix."' "$voice"
-grep -qF '"No understand. Say more?"' "$voice"
+grep -qF 'few word do trick' "$voice"
+grep -qF '"Fix what? Which file?"' "$voice"
 grep -qF "Never concatenate words" "$voice"
 grep -qF "externally attributed" "$voice"
 
