@@ -12,21 +12,22 @@ replies back as history, and records per-turn and cumulative input+output
 tokens so you can graph the crossover. Raw token counts, no caching (the
 conservative read; caching only helps Kevin more on cost).
 
-    KEVIN_BENCH_MODEL   model id (default: claude-opus-4-8)
+    KEVIN_BENCH_MODEL   model id (default: claude-opus-5-5)
     ANTHROPIC_API_KEY   required
 """
 
 import json
 import os
-import time
 from pathlib import Path
 
 import anthropic
 
+from voice import startup_prompt
+
 ROOT = Path(__file__).resolve().parent.parent
-VOICE = (ROOT / "skills" / "kevin" / "SKILL.md").read_text()
+VOICE = startup_prompt()
 PLAIN = "You are a helpful assistant."
-MODEL = os.environ.get("KEVIN_BENCH_MODEL", "claude-opus-4-8")
+MODEL = os.environ.get("KEVIN_BENCH_MODEL", "claude-opus-5-5")
 
 TURNS = [
     "I need to add rate limiting to my API. What are my options?",
@@ -43,18 +44,9 @@ TURNS = [
 
 
 def call(client, system, messages):
-    delays = [5, 10, 20, 30, 45]
-    for attempt in range(len(delays) + 1):
-        try:
-            r = client.messages.create(
-                model=MODEL, max_tokens=4096, system=system, messages=messages
-            )
-            text = "".join(b.text for b in r.content if b.type == "text")
-            return r.usage.input_tokens, r.usage.output_tokens, text
-        except anthropic.RateLimitError:
-            if attempt == len(delays):
-                raise
-            time.sleep(delays[attempt])
+    r = client.messages.create(model=MODEL, max_tokens=8192, system=system, messages=messages)
+    text = "".join(b.text for b in r.content if b.type == "text")
+    return r.usage.input_tokens, r.usage.output_tokens, text
 
 
 def run(client, system, label):
@@ -70,7 +62,7 @@ def run(client, system, label):
 
 
 def main():
-    client = anthropic.Anthropic()
+    client = anthropic.Anthropic(max_retries=6)
     print("NORMAL arm:")
     normal = run(client, PLAIN, "normal")
     print("KEVIN arm:")
@@ -85,7 +77,8 @@ def main():
     nt, kt = normal[-1]["cum"], kevin[-1]["cum"]
     print(f"\nSession total: normal {nt}, kevin {kt}  ({(kt-nt)/nt*100:+.0f}% total token use)")
 
-    out = ROOT / "benchmarks" / "session-result.json"
+    out = ROOT / "benchmarks" / "data" / "session.json"
+    out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps({"model": MODEL, "turns": TURNS, "normal": normal, "kevin": kevin}, indent=2))
     print("wrote", out)
 

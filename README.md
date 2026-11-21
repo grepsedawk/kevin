@@ -17,7 +17,7 @@ It governs prose only. Chat replies, summaries, explanations. It leaves code, co
   </picture>
 </a>
 
-Real captures, same prompt with and without Kevin. [See 30 more.](examples.md)
+Real captures, same prompt with and without Kevin. [See all 30.](examples.md)
 
 What Kevin won't touch: code, commit messages, PR descriptions, and security or destructive-action warnings stay in full, plain English. Compression is for the chat, not for the things you read back later under your name.
 
@@ -31,21 +31,25 @@ Tokens are cheap. A long-winded Opus answer costs a fraction of a cent. The reso
 
 The token savings are a side effect. A good one.
 
+## Easier to read, not just shorter
+
+Shorter only counts if nothing important falls out, so Kevin is also checked against a plain assistant on 24 held-out cases (status updates, dense summaries, safety warnings, emails, mode switches) with Claude Opus 5.5 and a blind judge from another model family. Kevin answers took noticeably less effort to read (a quick skim instead of a normal read), used about a third fewer words, and dropped fewer facts and caveats than the plain assistant did. That comparison ran on 0.3.2. Against 0.3.2, 0.4.0 took less effort to read and used about 11% fewer words on Claude Opus 5.5 across 20 cases written after the earlier versions were picked, with about the same number of missed facts. When Kevin needs something from you, an approval or a missing value, it goes on its own line at the end.
+
 ## The savings
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/savings-dark.png">
-  <img alt="Output tokens per answer: Kevin cuts 43 to 87%, biggest on the wordier model" src="docs/savings-light.png">
+  <img alt="Output tokens per answer on Opus, Sonnet, and Haiku 5.5: Kevin cuts 68 to 81%" src="docs/savings-light.png">
 </picture>
 
 ## It compounds over a chat
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/compounding-dark.png">
-  <img alt="Total tokens over a 10-turn chat: Kevin uses 64% fewer by turn 10" src="docs/compounding-light.png">
+  <img alt="Total tokens over a 10-turn chat on Opus 5.5: Kevin uses 50% fewer by turn 10" src="docs/compounding-light.png">
 </picture>
 
-A single answer understates it. The API is stateless, so the whole transcript rides along on every turn. Kevin's shorter replies keep that history lean, and the gap widens turn over turn. These are raw token counts; with caching the cost gap holds up, just driven by Kevin's shorter output rather than the smaller history.
+A single answer understates it. The API is stateless, so the whole transcript rides along on every turn. Kevin's shorter replies keep that history lean, and the gap widens turn over turn. These are raw token counts from one uncached conversation.
 
 ## One skill, any compatible agent
 
@@ -79,7 +83,7 @@ Review third-party skills before installing them. This one contains instructions
 
 ### Plugin compatibility
 
-The existing marketplace install remains available for Claude Code and Codex. It bundles the same portable skill plus two `SessionStart` hooks for startup/resume/clear and post-compaction reload.
+The existing marketplace install remains available for Claude Code and Codex. It bundles the same portable skill plus two `SessionStart` hooks for startup/resume/clear and post-compaction reload. The hooks inject the skill's instructions without its YAML frontmatter, which the model never needed.
 
 Add the marketplace:
 
@@ -112,11 +116,13 @@ Reproduce the charts:
 
 ```
 python3 -m pip install anthropic
-ANTHROPIC_API_KEY=... python3 benchmarks/run.py       # per-answer savings
-ANTHROPIC_API_KEY=... python3 benchmarks/session.py   # 10-turn compounding
+ANTHROPIC_API_KEY=... python3 benchmarks/run.py        # per-answer savings
+ANTHROPIC_API_KEY=... python3 benchmarks/session.py    # 10-turn compounding
+ANTHROPIC_API_KEY=... python3 benchmarks/examples.py   # rewrites examples.md
+python3 benchmarks/charts.py                           # renders docs/*.png (Chrome)
 ```
 
-`run.py` reports the output-token delta split into prose and code buckets. `session.py` runs one scripted conversation through both arms and records per-turn and cumulative tokens. Set `KEVIN_BENCH_MODEL` to test another model; `run.py` also takes `KEVIN_BENCH_TRIALS` (default 5).
+Every script sends the same text the plugin hook injects: the skill without its frontmatter. `run.py` reports the output-token delta split into prose and code buckets for each model in `KEVIN_BENCH_MODELS` (default Opus 5.5, Sonnet 5.5, Haiku 5.5; `KEVIN_BENCH_MODEL` also works for one model), with `KEVIN_BENCH_TRIALS` trials per prompt (default 5). `session.py` runs one scripted conversation through both arms and records per-turn and cumulative tokens; `examples.py` captures one Normal and one Kevin answer per question. Set `KEVIN_BENCH_MODEL` to change the model for those two. Results land in `benchmarks/data/`, and `charts.py` renders the light and dark PNGs from that data with headless Chrome.
 
 Test prompt quality with Codex while editing. Choose the model you actually use:
 

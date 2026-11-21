@@ -6,8 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'if [ -r \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\" ]; then cat \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\"; else printf \"%s\\n\" \"Use Kevin voice: fewest clear words, prose only.\"; fi'",
-            "commandWindows": "if (Test-Path \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\") { Get-Content -Raw \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\" } else { Write-Output \"Use Kevin voice: fewest clear words, prose only.\" }",
+            "command": "sh -c 'if [ -r \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\" ]; then LC_ALL=C awk '\\''NR==1{sub(/^\\357\\273\\277/,\"\")}{sub(/\\r$/,\"\")}NR==1&&$0==\"---\"{f=1;h=$0;next}f{h=h\"\\n\"$0;if($0==\"---\"){f=0;h=\"\"}next}{print}END{if(f)print h}'\\'' \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\"; else printf \"%s\\n\" \"Use Kevin voice: fewest clear words, prose only.\"; fi'",
+            "commandWindows": "if (Test-Path \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\") { (Get-Content -Raw \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\") -replace '(?s)\\A---\\r?\\n(?:.*?\\r?\\n)??---(?:\\r?\\n|\\z)', '' } else { Write-Output \"Use Kevin voice: fewest clear words, prose only.\" }",
             "timeout": 5,
             "statusMessage": "Loading Kevin..."
           }
@@ -18,8 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'if [ -r \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\" ]; then cat \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\"; else printf \"%s\\n\" \"Use Kevin voice: fewest clear words, prose only.\"; fi'",
-            "commandWindows": "if (Test-Path \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\") { Get-Content -Raw \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\" } else { Write-Output \"Use Kevin voice: fewest clear words, prose only.\" }",
+            "command": "sh -c 'if [ -r \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\" ]; then LC_ALL=C awk '\\''NR==1{sub(/^\\357\\273\\277/,\"\")}{sub(/\\r$/,\"\")}NR==1&&$0==\"---\"{f=1;h=$0;next}f{h=h\"\\n\"$0;if($0==\"---\"){f=0;h=\"\"}next}{print}END{if(f)print h}'\\'' \"$CLAUDE_PLUGIN_ROOT/skills/kevin/SKILL.md\"; else printf \"%s\\n\" \"Use Kevin voice: fewest clear words, prose only.\"; fi'",
+            "commandWindows": "if (Test-Path \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\") { (Get-Content -Raw \"$env:CLAUDE_PLUGIN_ROOT\\skills\\kevin\\SKILL.md\") -replace '(?s)\\A---\\r?\\n(?:.*?\\r?\\n)??---(?:\\r?\\n|\\z)', '' } else { Write-Output \"Use Kevin voice: fewest clear words, prose only.\" }",
             "timeout": 5
           }
         ]

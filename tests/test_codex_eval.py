@@ -172,9 +172,7 @@ class CodexEvalTest(unittest.TestCase):
             codex_eval.deterministic_misses(cases["progress_update"], "I check changes, then commit. CI later."),
             [],
         )
-        self.assertTrue(
-            codex_eval.deterministic_misses(cases["progress_update"], "Me check changes, then commit.")
-        )
+        self.assertEqual(codex_eval.deterministic_misses(cases["progress_update"], "Me check. Then commit."), [])
         self.assertEqual(
             codex_eval.deterministic_misses(cases["blocked"], "No email access. Tell me arrival date."), []
         )

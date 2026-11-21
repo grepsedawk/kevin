@@ -1,0 +1,159 @@
+{
+  "model": "claude-opus-5-5",
+  "turns": [
+    "I need to add rate limiting to my API. What are my options?",
+    "Let's go with the token bucket. How does it actually work?",
+    "Show me a minimal implementation in Python.",
+    "What happens under bursty traffic with that implementation?",
+    "How would I make this work across multiple servers?",
+    "Walk me through using Redis for the shared counter.",
+    "What's the failure mode if Redis goes down?",
+    "How do I return proper rate-limit headers to clients?",
+    "Should I rate limit per-user or per-IP?",
+    "Give me a checklist to take this to production."
+  ],
+  "normal": [
+    {
+      "turn": 1,
+      "input": 37,
+      "output": 1635,
+      "total": 1672,
+      "cum": 1672
+    },
+    {
+      "turn": 2,
+      "input": 1618,
+      "output": 3003,
+      "total": 4621,
+      "cum": 6293
+    },
+    {
+      "turn": 3,
+      "input": 4511,
+      "output": 695,
+      "total": 5206,
+      "cum": 11499
+    },
+    {
+      "turn": 4,
+      "input": 5177,
+      "output": 3092,
+      "total": 8269,
+      "cum": 19768
+    },
+    {
+      "turn": 5,
+      "input": 6968,
+      "output": 3196,
+      "total": 10164,
+      "cum": 29932
+    },
+    {
+      "turn": 6,
+      "input": 9370,
+      "output": 5054,
+      "total": 14424,
+      "cum": 44356
+    },
+    {
+      "turn": 7,
+      "input": 12990,
+      "output": 3886,
+      "total": 16876,
+      "cum": 61232
+    },
+    {
+      "turn": 8,
+      "input": 15715,
+      "output": 4173,
+      "total": 19888,
+      "cum": 81120
+    },
+    {
+      "turn": 9,
+      "input": 18564,
+      "output": 2768,
+      "total": 21332,
+      "cum": 102452
+    },
+    {
+      "turn": 10,
+      "input": 21136,
+      "output": 2988,
+      "total": 24124,
+      "cum": 126576
+    }
+  ],
+  "kevin": [
+    {
+      "turn": 1,
+      "input": 1653,
+      "output": 487,
+      "total": 2140,
+      "cum": 2140
+    },
+    {
+      "turn": 2,
+      "input": 2078,
+      "output": 488,
+      "total": 2566,
+      "cum": 4706
+    },
+    {
+      "turn": 3,
+      "input": 2512,
+      "output": 1349,
+      "total": 3861,
+      "cum": 8567
+    },
+    {
+      "turn": 4,
+      "input": 3275,
+      "output": 1117,
+      "total": 4392,
+      "cum": 12959
+    },
+    {
+      "turn": 5,
+      "input": 3902,
+      "output": 2000,
+      "total": 5902,
+      "cum": 18861
+    },
+    {
+      "turn": 6,
+      "input": 4948,
+      "output": 2521,
+      "total": 7469,
+      "cum": 26330
+    },
+    {
+      "turn": 7,
+      "input": 6196,
+      "output": 1512,
+      "total": 7708,
+      "cum": 34038
+    },
+    {
+      "turn": 8,
+      "input": 6945,
+      "output": 2208,
+      "total": 9153,
+      "cum": 43191
+    },
+    {
+      "turn": 9,
+      "input": 8310,
+      "output": 1033,
+      "total": 9343,
+      "cum": 52534
+    },
+    {
+      "turn": 10,
+      "input": 8993,
+      "output": 1517,
+      "total": 10510,
+      "cum": 63044
+    }
+  ]
+}

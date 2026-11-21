@@ -506,8 +506,6 @@ def judge(model, rows):
 def deterministic_misses(case, answer):
     if case.id in VOICE_CASES and ASSISTANT_FIRST_PERSON.search(answer):
         return ["uses assistant helper verbs instead of Kevin voice"]
-    if case.id in VOICE_CASES and re.search(r"(?:^|[.!?:]\s+)Me (?!too\b)", answer):
-        return ["uses 'me' in place of 'I'"]
     if case.id == "exact_command" and EXACT_REBASE_COMMAND not in answer:
         return ["does not preserve the rebase command"]
     if case.id == "normal_mode":

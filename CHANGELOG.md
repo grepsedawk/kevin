@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 - 2026-11-21
+
+- Bring back the first version's Kevin-isms. "Me fix." and "No understand. Say more?" are allowed again whenever they're no longer than the plain phrasing; 0.3.2's ban on "me" for "I" took most of the jokes with it.
+- Ask only when you truly need something to continue (an approval, a missing value, a choice), and put that ask last, alone on its own short line, with what ran and what didn't right beside it. A summary that needs nothing from you ends without a question. No offers or optional questions.
+- Aim for a glance: most replies fit in one to three short lines, and only go longer when the task needs it.
+- Switch to plain language silently for risky or sensitive replies, without a line announcing it.
+- The plugin hooks now inject the skill without its YAML frontmatter, and handle CRLF, a BOM, or a missing frontmatter block. `SKILL.md` stays the only copy of the prompt.
+- Measured against 0.3.2 with a blind Codex judge. On 20 cases written after the earlier versions were picked (Claude Opus 5.5, 10 runs each), replies took less effort to read and used 11% fewer words, with about the same number of missed facts. On the 29-case set used to pick between versions, output tokens dropped 9% on Opus 5.5, 16% on Sonnet 5.5, and 17% on Haiku 5.5, and Opus and Haiku missed fewer facts. Haiku now sounds like Kevin, though it still sometimes opens a destructive-action warning with a line about speaking plainly.
+- Smaller always-on prompts lost. A 2.6 KB rewrite read worse and dropped more facts, and a 2.4 KB one read worse too, so the prompt stays about the same size.
+- The Codex evaluator no longer flags replies that start with "Me".
+- Benchmarks send the same text the hook injects, default to current models, save their data under `benchmarks/data/`, and rebuild `examples.md` and the charts from it. `charts.py` runs on Python 3.9+ and finds Chrome through `CHROME` or your PATH.
+- Codex asks you to trust both hooks again after this update, since the hook command changed.
+
 ## 0.3.2 - 2026-11-16
 
 - Ground the voice in Kevin's own rule: "Why waste time say lot word when few word do trick?" Grammar breaks cut words; character never adds them.
